@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Orders — LUMINARY{% endblock %}
+{% block content %}
+<div class="container page-gap">
+  <h1 class="page-title">Your Orders</h1>
+  {% if orders %}
+  <div class="orders-list">
+    {% for order in orders %}
+    <div class="order-card">
+      <div class="order-card__head">
+        <div>
+          <h3>Order #{{ order.id }}</h3>
+          <p class="order-card__date">{{ order.created_at.strftime('%B %d, %Y') }}</p>
+        </div>
+        <div class="order-card__right">
+          <span class="badge badge--{{ 'ok' if order.status == 'confirmed' else 'pending' }}">
+            {{ order.status|capitalize }}
+          </span>
+          <strong>${{ "%.2f"|format(order.total) }}</strong>
+        </div>
+      </div>
+      <div class="order-card__items">
+        {% set items = order.items | fromjson %}
+        {% for pid, item in items.items() %}
+        <span class="order-card__item">{{ item.name }} × {{ item.qty }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <p>No orders yet.</p>
+    <a href="{{ url_for('products') }}" class="btn btn--primary">Start shopping</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

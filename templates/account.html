@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Account — LUMINARY{% endblock %}
+{% block content %}
+<div class="container page-gap">
+  <h1 class="page-title">My Account</h1>
+  <div class="account-layout">
+    <div class="account-card">
+      <div class="account-avatar">{{ current_user.username[0]|upper }}</div>
+      <h2>{{ current_user.username }}</h2>
+      <p class="muted">{{ current_user.email }}</p>
+      <p class="muted">Member since {{ current_user.created_at.strftime('%B %Y') }}</p>
+    </div>
+    <div class="account-stats">
+      <div class="stat-card">
+        <span class="stat-card__num">{{ order_count }}</span>
+        <span class="stat-card__label">Orders placed</span>
+      </div>
+      <div class="account-actions">
+        <a href="{{ url_for('orders') }}" class="btn btn--primary btn--full">View orders</a>
+        <a href="{{ url_for('products') }}" class="btn btn--ghost btn--full">Continue shopping</a>
+        <a href="{{ url_for('logout') }}" class="btn btn--ghost btn--full">Sign out</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}LUMINARY — Curated Goods{% endblock %}
+{% block content %}
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero__inner">
+    <p class="hero__eyebrow">New arrivals · Spring 2024</p>
+    <h1 class="hero__title">Beautifully<br/><em>Considered</em> Things</h1>
+    <p class="hero__sub">Carefully selected products that bring intention to everyday life.</p>
+    <a href="{{ url_for('products') }}" class="btn btn--primary btn--lg">Explore the collection</a>
+  </div>
+  <div class="hero__deco"></div>
+</section>
+
+<!-- Category strip -->
+<section class="cats">
+  <div class="container">
+    <div class="cats__grid">
+      {% for cat in categories %}
+      <a href="{{ url_for('products', category=cat.id) }}" class="cat-card">
+        <span class="cat-card__name">{{ cat.name }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Featured products -->
+<section class="section">
+  <div class="container">
+    <div class="section__head">
+      <h2 class="section__title">Featured</h2>
+      <a href="{{ url_for('products') }}" class="section__link">View all →</a>
+    </div>
+    <div class="products-grid">
+      {% for p in featured %}
+      <article class="product-card">
+        <a href="{{ url_for('product_detail', pid=p.id) }}" class="product-card__img-wrap">
+          <img src="{{ p.image_url }}" alt="{{ p.name }}" class="product-card__img" loading="lazy" />
+        </a>
+        <div class="product-card__body">
+          <p class="product-card__cat">{{ p.category.name }}</p>
+          <h3 class="product-card__name">
+            <a href="{{ url_for('product_detail', pid=p.id) }}">{{ p.name }}</a>
+          </h3>
+          <div class="product-card__footer">
+            <span class="product-card__price">${{ "%.2f"|format(p.price) }}</span>
+            <form method="POST" action="{{ url_for('add_to_cart', pid=p.id) }}" class="inline">
+              <input type="hidden" name="qty" value="1"/>
+              <button type="submit" class="btn btn--sm btn--accent">Add to cart</button>
+            </form>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Value props -->
+<section class="props">
+  <div class="container">
+    <div class="props__grid">
+      <div class="prop">
+        <div class="prop__icon">✦</div>
+        <h4>Curated Selection</h4>
+        <p>Every product is thoughtfully chosen for quality and longevity.</p>
+      </div>
+      <div class="prop">
+        <div class="prop__icon">◎</div>
+        <h4>Free Shipping</h4>
+        <p>Complimentary delivery on all orders over $75.</p>
+      </div>
+      <div class="prop">
+        <div class="prop__icon">◇</div>
+        <h4>Easy Returns</h4>
+        <p>30-day returns, no questions asked.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

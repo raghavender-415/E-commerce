@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — LUMINARY{% endblock %}
+{% block content %}
+<div class="container page-gap">
+
+  <nav class="breadcrumb">
+    <a href="{{ url_for('index') }}">Home</a>
+    <span>›</span>
+    <a href="{{ url_for('products', category=product.category_id) }}">{{ product.category.name }}</a>
+    <span>›</span>
+    <span>{{ product.name }}</span>
+  </nav>
+
+  <div class="detail-layout">
+    <div class="detail__img-wrap">
+      <img src="{{ product.image_url }}" alt="{{ product.name }}" class="detail__img" />
+    </div>
+
+    <div class="detail__info">
+      <p class="detail__cat">{{ product.category.name }}</p>
+      <h1 class="detail__name">{{ product.name }}</h1>
+      <p class="detail__price">${{ "%.2f"|format(product.price) }}</p>
+
+      <p class="detail__desc">{{ product.description }}</p>
+
+      {% if product.stock > 0 %}
+        <p class="detail__stock">✓ In stock ({{ product.stock }} available)</p>
+        <form method="POST" action="{{ url_for('add_to_cart', pid=product.id) }}" class="detail__form">
+          <div class="qty-wrap">
+            <label>Qty</label>
+            <input type="number" name="qty" value="1" min="1" max="{{ product.stock }}" class="input input--qty" />
+          </div>
+          <button type="submit" class="btn btn--primary btn--lg">Add to cart</button>
+        </form>
+      {% else %}
+        <p class="detail__stock detail__stock--out">✕ Currently out of stock</p>
+      {% endif %}
+
+      <ul class="detail__meta">
+        <li>Category: <strong>{{ product.category.name }}</strong></li>
+        <li>SKU: <strong>LUM-{{ "%04d"|format(product.id) }}</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  {% if related %}
+  <section class="section">
+    <div class="section__head">
+      <h2 class="section__title">You might also like</h2>
+    </div>
+    <div class="products-grid">
+      {% for p in related %}
+      <article class="product-card">
+        <a href="{{ url_for('product_detail', pid=p.id) }}" class="product-card__img-wrap">
+          <img src="{{ p.image_url }}" alt="{{ p.name }}" class="product-card__img" loading="lazy"/>
+        </a>
+        <div class="product-card__body">
+          <p class="product-card__cat">{{ p.category.name }}</p>
+          <h3 class="product-card__name"><a href="{{ url_for('product_detail', pid=p.id) }}">{{ p.name }}</a></h3>
+          <div class="product-card__footer">
+            <span class="product-card__price">${{ "%.2f"|format(p.price) }}</span>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+</div>
+{% endblock %}
